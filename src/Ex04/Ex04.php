@@ -5,7 +5,7 @@ namespace Aoc2024\Ex04;
 use Aoc2024\Main\Exercise;
 
 /**
- * 
+ * part 2: 1885, too low
  */
 class Ex04 extends Exercise
 {
@@ -17,8 +17,32 @@ class Ex04 extends Exercise
 
     public function run($arr)
     {
-        # code...
+        $splat = [];
+        foreach ($arr as $row) {
+            $splat[] = str_split($row);
+        }
+
+        $score = 0;
+
+        for ($i=1; $i < count($splat) - 1; $i++) { 
+            for ($j=1; $j < count($splat[0]) - 1; $j++) {
+                $subject = $splat[$i - 1][$j - 1] . $splat[$i - 1][$j + 1] . $splat[$i + 1][$j - 1] . $splat[$i + 1][$j + 1];
+
+                if ($this->hasXmas($subject) && $splat[$i][$j] == 'A') {
+                    $score++;
+                }
+            }
+        }
+
+        print_r($score . PHP_EOL);
+
     }
+
+    public function hasXmas($str)
+    {
+        return in_array($str, ['SSMM', 'MSMS', 'MMSS', 'SMSM']);
+    }
+
 
     public function runPartOne($arr)
     {
