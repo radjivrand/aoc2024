@@ -17,6 +17,11 @@ class Ex04 extends Exercise
 
     public function run($arr)
     {
+        # code...
+    }
+
+    public function runPartOne($arr)
+    {
         $horizontal = 0;
         foreach ($arr as $hor) {
             $horizontal += $this->countMatches($hor);
@@ -37,101 +42,76 @@ class Ex04 extends Exercise
             $vertical += $this->countMatches(implode('', $inner));
         }
 
-        $this->outputArr($arr);
+        $originalSplat = $splat;
 
-        $res = [];
+        $backslash = [];
         foreach ($splat as $rowKey => &$row) {
             foreach ($row as $colKey => &$value) {
-                print_r("at: $rowKey, $colKey" . PHP_EOL);
-
                 if ($value != '.') {
-                    print_r($value . PHP_EOL);
+                    $diagonal = [];
+                    $diagonal[] = $value;
                     $row[$colKey] = '.';
 
                     $counter = 1;
 
-                    while (isset($splat[$rowKey - $counter][$colKey + $counter])) {
-                        print_r($splat[$rowKey - $counter][$colKey + $counter]);
-                        die(PHP_EOL . 'dead 2');
-
-
-
+                    while (isset($splat[$rowKey + $counter][$colKey + $counter])) {
+                        $diagonal[] = $splat[$rowKey + $counter][$colKey + $counter];
+                        $splat[$rowKey + $counter][$colKey + $counter] = '.';
+                        $counter++;
                     }
 
-
-
-
-
+                    $backslash[] = $diagonal;
                 }
-
             }
-
-            // print_r($row);
         }
 
-        die(PHP_EOL . 'dead');
+        $backslashScore = 0;
+        foreach ($backslash as $brow) {
+            $backslashScore += $this->countMatches(implode('', $brow));
+        }
 
-        // print_r($res);
+        $splat = $originalSplat;
 
         $slash = [];
+        foreach ($splat as $rowKey => &$row) {
+            foreach ($row as $colKey => &$value) {
+                if ($value != '.') {
+                    $diagonal = [];
+                    $diagonal[] = $value;
+                    $row[$colKey] = '.';
 
-        // for ($i= 0; $i < count($splat) - 1; $i++) {
-        //     for ($j = 0; $j <= $i; $j++) { 
-        //         print_r('i:' . ($i - $j) . ', j: ' . $j);
-        //         print_r(PHP_EOL);
-        //     }
+                    $counter = 1;
 
-        //     print_r(PHP_EOL);
-        // }
+                    while (isset($splat[$rowKey + $counter][$colKey - $counter])) {
+                        $diagonal[] = $splat[$rowKey + $counter][$colKey - $counter];
+                        $splat[$rowKey + $counter][$colKey - $counter] = '.';
+                        $counter++;
+                    }
 
-        // print_r($splat);
+                    $slash[] = $diagonal;
+                }
+            }
+        }
 
-        // foreach (range(0, count($arr)) as $columnIndex) {
-        //     print_r($columnIndex);
-        //     $col = array_column($arr, $columnIndex);
-        //     $test = preg_match_all('/XMAS|SAMX/', implode('', $col), $matches);
-        //     $vertical += count($matches[0]);
-        //     print_r($matches[0]);
-        //     print_r($col);
-        //     // print_r(array_column($arr, $columnIndex));
+        $slashScore = 0;
+        foreach ($slash as $srow) {
+            $slashScore += $this->countMatches(implode('', $srow));
+        }
 
-        // }
-
-        // print_r($vertical);
-
-
-        // return $arr;
+        return $horizontal + $vertical + $backslashScore + $slashScore;
     }
 
     public function countMatches($inputString)
     {
-        preg_match_all('/XMAS|SAMX/', $inputString, $matches);
+        preg_match_all('/(?=XMAS|SAMX)/', $inputString, $matches);
         return count($matches[0]);
     }
 
     public function outputArr($arr)
     {
-        // print_r($arr);
         foreach ($arr as $row) {
-            print_r($row);
+            print_r(is_array($row) ? implode('', $row) : $row);
             print_r(PHP_EOL);
         }
     }
-
-
-// 00
-
-// 10 01
-
-// 20 11 02
-
-// 30 21 12 03
-
-// 40 31 22 13 04
-
-// 50 41 32 23 14 05
-// 
-// 
-
-
 }
