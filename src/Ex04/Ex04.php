@@ -37,37 +37,41 @@ class Ex04 extends Exercise
             $vertical += $this->countMatches(implode('', $inner));
         }
 
+        $this->outputArr($arr);
+
         $res = [];
         foreach ($splat as $rowKey => &$row) {
             foreach ($row as $colKey => &$value) {
-                if ($value !== '.') {
-                    $diagonal[] = $value;
-                    $value = '.';
+                print_r("at: $rowKey, $colKey" . PHP_EOL);
 
-                    // for ($i=0; $i < $rowKey; $i++) { 
-                    //     for ($j=0; $j <= $i; $j++) {
-                    //         print_r('i:' . ($i - $j) . ', j: ' . $j);
-                    //         print_r(PHP_EOL);
+                if ($value != '.') {
+                    print_r($value . PHP_EOL);
+                    $row[$colKey] = '.';
+
+                    $counter = 1;
+
+                    while (isset($splat[$rowKey - $counter][$colKey + $counter])) {
+                        print_r($splat[$rowKey - $counter][$colKey + $counter]);
+                        die(PHP_EOL . 'dead 2');
 
 
 
+                    }
 
-                    //     }
-                    // }
 
-                    // mark as ., find others on sam diagonal
-                    // iterate over values and replace with .
+
 
 
                 }
-                print_r($row);
-                print_r(PHP_EOL);
+
             }
-            $res[] = $diagonal;
+
+            // print_r($row);
         }
 
+        die(PHP_EOL . 'dead');
 
-
+        // print_r($res);
 
         $slash = [];
 
@@ -103,6 +107,15 @@ class Ex04 extends Exercise
     {
         preg_match_all('/XMAS|SAMX/', $inputString, $matches);
         return count($matches[0]);
+    }
+
+    public function outputArr($arr)
+    {
+        // print_r($arr);
+        foreach ($arr as $row) {
+            print_r($row);
+            print_r(PHP_EOL);
+        }
     }
 
 
