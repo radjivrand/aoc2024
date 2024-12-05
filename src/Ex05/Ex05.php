@@ -31,7 +31,7 @@ class Ex05 extends Exercise
             }
         }
 
-        $this->run();
+        print_r($this->run());
     }
 
     public function run()
@@ -50,19 +50,23 @@ class Ex05 extends Exercise
             $valid[] = $set;
         }
 
-        // part 1
-        // $res = 0;
+        $res = 0;
 
+        // part 2
+        foreach ($inValid as $invalidSet) {
+            $shuffled[] = $this->checkAndSwitch($invalidSet);
+        }
+
+        foreach ($shuffled as $values) {
+            $res += $values[(count($values) - 1) / 2];
+        }
+
+        // part 1
         // foreach ($valid as $values) {
         //     $res += $values[(count($values) - 1) / 2];
         // }
 
-        // print_r($inValid);
-
-        sort($this->rules);
-        print_r($this->rules);
-
-        // return $res;
+        return $res;
     }
 
     public function isValidPair(array $pair): bool
@@ -74,5 +78,20 @@ class Ex05 extends Exercise
         }
 
         return false;
+    }
+
+    public function checkAndSwitch($arr)
+    {
+        for ($i=0; $i < count($arr) - 1; $i++) { 
+            if (!$this->isValidPair([$arr[$i], $arr[$i + 1]])) {
+                $temp = $arr[$i];
+                $arr[$i] = $arr[$i + 1];
+                $arr[$i + 1] = $temp;
+
+                return $this->checkAndSwitch($arr);
+            }
+        }
+
+        return $arr;
     }
 }
