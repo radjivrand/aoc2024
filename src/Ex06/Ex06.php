@@ -28,7 +28,6 @@ class Ex06 extends Exercise
         $visited = [];
         $visited[$guardLocation[0] . ':' . $guardLocation[1]] = 'x';
 
-        $visited = [];
         while ($next) {
             $next = $this->findNextLocation($next);
             if ($next) {
@@ -36,7 +35,42 @@ class Ex06 extends Exercise
             }
         }
 
-        print_r(count($visited));
+        array_shift($visited);
+
+        // part 2
+        $failCounter = [];
+
+        foreach ($visited as $key => $value) {
+            $coords = explode(':', $key);
+            $this->map[$coords[0]][$coords[1]] = '#';
+
+            $revisited = [];
+            $revisited[$guardLocation[0] . ':' . $guardLocation[1]] = 'x';
+            $next = [$this->findGuard(), '^'];
+
+            $loopCounter = 0;
+
+            while ($next) {
+                $coords = explode(':', $key);
+
+                $next = $this->findNextLocation($next);
+
+                if ($loopCounter > 10000) {
+                    $next = false;
+                    $failCounter[] = $key;
+                }
+
+                if ($next) {
+                    $revisited[$next[0][0] . ':' . $next[0][1]] = 'x';
+                }
+
+                $loopCounter++;
+            }
+
+            $this->map[$coords[0]][$coords[1]] = '.';
+        }
+
+        print_r(count($failCounter));
     }
 
     public function output($arr)
