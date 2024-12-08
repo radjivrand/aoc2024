@@ -5,7 +5,8 @@ namespace Aoc2024\Ex07;
 use Aoc2024\Main\Exercise;
 
 /**
- * 
+ * too low: 424977581720692
+ * other: 424977609625985 fffffuuuu, there was a space before first input
  */
 class Ex07 extends Exercise
 {
@@ -44,10 +45,19 @@ class Ex07 extends Exercise
             $product = $values[0];
 
             foreach (str_split($operators) as $key => $sign) {
-                eval('$product = $product' . $sign . $values[$key + 1] . ';');
-
-                if ($product > $result) {
-                    continue 2;
+                switch ($sign) {
+                    case '+':
+                        $product += $values[$key + 1];
+                        break;
+                    case '*':
+                        $product *= $values[$key + 1];
+                        break;
+                    case '.':
+                        $product .= $values[$key + 1];
+                        break;
+                    default:
+                        print_r('what?' . PHP_EOL);
+                        break;
                 }
             }
 
@@ -56,24 +66,23 @@ class Ex07 extends Exercise
             }
         }
 
-
         return false;
     }
 
     public function getOperatorOptions($values)
     {
-        $amount = 2 ** (count($values) - 1);
-        $len = base_convert($amount, 10, 2);
+        $amount = 3 ** (count($values) - 1);
+        $len = base_convert($amount, 10, 3);
 
         $options = [];
 
         for ($i=0; $i < $amount; $i++) {
-            $val = base_convert($i, 10, 2);
+            $val = base_convert($i, 10, 3);
             $options[] = str_pad($val, strlen($len - 1), '0', STR_PAD_LEFT);
         }
 
         foreach ($options as &$option) {
-            $option = str_replace(['0' , '1'], ['+', '*'], $option);
+            $option = str_replace(['0' , '1', '2'], ['+', '*', '.'], $option);
         }
 
         return $options;
